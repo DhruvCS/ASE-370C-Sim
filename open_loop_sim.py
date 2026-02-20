@@ -13,7 +13,7 @@ g = 9.81  # Gravitational acceleration, m/s^2
 CD = 0.02 # Drag Coefficient
 CL_alpha = 5 # Lift Coefficient per unit Attack Angle, /rad
 CL_gamma = 0.4 # Lift Coefficient per unit Elevator, /rad
-CM_alpha = -0.7 # Moment Coefficient per unit Attack Angle, /rad
+CM_alpha = 0.2 # Moment Coefficient per unit Attack Angle, /rad
 CM_thetadot = -10 # Moment Coefficient per unit Pitch Rate, s/rad
 CM_gamma = -1.2 # Moment Coefficient per unit Elevator, /rad
 

@@ -3,18 +3,18 @@ import matplotlib.pyplot as plt
 from scipy.linalg import solve_continuous_are
 
 # ================= SYSTEM PARAMETERS ==================== #
-m = 9200
+m = 8500.0
 A_w = 27.87
 c = 3.45
-I = 75e3
+I = 40000.0
 U0 = 175.0
-rho = 1.0
+rho = 0.74
 g = 9.81
 
 CD = 0.02
 CL_alpha = 5.0
 CL_gamma = 0.4
-CM_alpha = -0.7
+CM_alpha = 0.2
 CM_thetadot = -10.0
 CM_gamma = -1.2
 
@@ -52,8 +52,8 @@ C = np.array([[1, 0, 0, 0],
               [0, 0, 1, 0]])
 
 # LQR Controller
-Q = np.diag([1.0, 1.0, 200.0, 10.0])
-R = np.diag([2.0, 1.0])
+Q = np.diag([1.0, 1.0, 500.0, 3.0])
+R = 0.5*np.diag([1.0, 2.0])
 
 P = solve_continuous_are(A4, B4, Q, R)
 K = np.linalg.solve(R, B4.T@P) # LQR Controller Gain
@@ -65,10 +65,10 @@ G = C@np.linalg.inv(A_CL)@B4
 N = -np.linalg.pinv(G) # Feedforward Compensator Gain
 
 # ==================== SIMULATION ===================== #
-Tf = 20.0
+Tf = 60.0
 dt = 0.01
 n = int(Tf/dt + 1)
-t = np.linspace(0,10.0,n)
+t = np.linspace(0,Tf,n)
 
 def wrap_angle(a):
     return np.arctan2(np.sin(a), np.cos(a))
@@ -79,13 +79,13 @@ X[:,0] = np.array([0.0, 200.0, U0, 0.0, 0.0, 0.0])
 U = np.zeros((np.size(B6,1),np.size(t)))
 
 # Reference States
-u_ref = U0*np.ones_like(t)
-u_ref[t>=0.5] = 200.0
+u_ref = 200.0*np.ones_like(t)
 w_ref = np.zeros_like(t)
 theta_ref = np.zeros_like(t)
+theta_ref[t>=20] = np.deg2rad(10)
 
 # Control Limits
-elev_max = np.deg2rad(25)
+elev_max = np.deg2rad(45)
 throttle_max = 40e3
 
 for i in range(0, n-1):
