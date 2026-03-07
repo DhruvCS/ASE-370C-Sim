@@ -14,7 +14,7 @@ def main():
     # =========================================================
     dt_inner = 0.005   # 200 Hz
     dt_outer = 0.5     # 2 Hz
-    Tf = 60.0
+    Tf = 120.0
     n = int(Tf / dt_inner) + 1
     t = np.linspace(0, Tf, n)
     outer_every = int(round(dt_outer / dt_inner))
@@ -68,8 +68,8 @@ def main():
 
         # Altitude loop
         Kp_alt=0.0004,
-        Ki_alt=0.0,
-        Kd_alt=0.001,
+        Ki_alt=0.00008,
+        Kd_alt=0.002,
         theta_ref_min=np.deg2rad(-3.0),
         theta_ref_max=np.deg2rad( 3.0),
         theta_rate_lim=np.deg2rad(0.5),
@@ -135,7 +135,7 @@ def main():
         return 160.0 + 5.0 * np.sin(2*np.pi*0.004*tt)
 
     def target_z_ref_cmd(tt):
-        return 2000.0 + 10.0 * np.sin(2*np.pi*0.01*tt)
+        return 2000.0 + 50.0 * np.sin(2*np.pi*0.01*tt)
 
     def target_zdot_ref_cmd(tt):
         return 10.0 * (2*np.pi*0.01) * np.cos(2*np.pi*0.01*tt)
@@ -267,7 +267,8 @@ def main():
     ax.scatter([X_tgt[0,0]], [X_tgt[1,0]], c='C1')
     ax.set_title("XZ Trajectories")
     ax.set_xlabel("x [m]"); ax.set_ylabel("z [m]")
-    ax.legend(); ax.grid(True); ax.set_aspect('equal', 'datalim')
+    ax.set_ylim([1990.0, 2010.0])
+    ax.legend(); ax.grid(True)
 
     # forward range
     ax = axs[0,1]
