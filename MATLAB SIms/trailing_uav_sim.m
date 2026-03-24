@@ -14,7 +14,7 @@ clc; close all;
 %  Simulation parameters
 %  =========================
 dt       = 0.005;           % 200 Hz inner loop
-Tend     = 120;             % seconds
+Tend     = 300;             % seconds
 N        = round(Tend/dt)+1;
 t        = (0:N-1)'*dt;
 g        = 9.81;
@@ -31,9 +31,9 @@ outer_k  = round(outer_dt/dt);
 target.V0      = 25;        % m/s
 target.z0      = 120;       % m (altitude)
 target.turnAmp = deg2rad(8);% heading oscillation amplitude (rad)
-target.turnW   = 2*pi/60;   % heading oscillation frequency (rad/s)
+target.turnW   = 0*pi/60;   % heading oscillation frequency (rad/s)
 target.climbAmp= 0.5;         % m altitude oscillation amplitude
-target.climbW  = 2*pi/60;   % rad/s
+target.climbW  = 0*pi/60;   % rad/s
 
 %% =========================
 %  Trailing objective
@@ -56,7 +56,6 @@ tau_phi   = 0.25;            % roll response time constant (s)
 tau_theta = 0.40;            % pitch response time constant (s)
 
 % Speed / altitude response time constants
-tau_V     = 2.0;             % speed response (s)
 tau_z     = 3.0;             % altitude response to theta (s)
 
 %% =========================
@@ -78,16 +77,11 @@ lim.h_rate_cmd   = 3.0;         % m/s
 %  =========================
 % Lateral: steer back to trail line (cross-track)
 ky      = 0.8;               % course correction gain
-y0      = 120;               % cross-track normalization (m) for sat()
 L1      = 500;
 
 % Longitudinal: along-track spacing control -> speed command
 kx      = 0.03;              % (m -> m/s) gain
 kdx     = 0.40;              % damping on along-track closure
-
-% Altitude tracking
-kh      = 0.04;              % (m -> rad) pitch cmd gain (through shaping)
-khdot   = 0.12;              % vertical speed damping
 
 %% =========================
 %  Autopilot gains (shaping layer)
@@ -102,8 +96,9 @@ kIV     = 0.2;               % slow integral (optional)
 intV    = 0;
 
 % Altitude hold -> pitch command
-kH      = 0.04;
-kIH     = 0.0020;
+kH      = 0.04;              % (m -> rad) pitch cmd gain (through shaping)
+kIH     = 0.0016;
+khdot   = 0.16;              % vertical speed damping
 intH    = 0;
 
 %% =========================
@@ -333,9 +328,9 @@ plot(t, P_o(:,3), 'LineWidth', 1.2); grid on;
 ylabel('Altitude z (m)'); legend('h_{cmd}','z');
 
 subplot(2,1,2);
-plot(t, theta_cmd_log, 'LineWidth', 1.2); hold on;
-plot(t, theta, 'LineWidth', 1.2); grid on;
-ylabel('\theta (rad)'); xlabel('Time (s)'); legend('\theta_{cmd}','\theta');
+plot(t, 180*theta_cmd_log/pi, 'LineWidth', 1.2); hold on;
+plot(t, 180*theta/pi, 'LineWidth', 1.2); grid on;
+ylabel('\theta (deg)'); xlabel('Time (s)'); legend('\theta_{cmd}','\theta');
 
 end
 
